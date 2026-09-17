@@ -1,42 +1,143 @@
-# Smart Driver Drowsiness & Safety System
+🚗 Smart Driver Drowsiness & Safety System
 
-## Project Title and Brief Description
-**Smart Driver Drowsiness & Safety System** is a driver safety prototype designed to monitor a driver, identify possible drowsiness or distraction, and respond with suitable alerts to prevent accidents[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span). 
+📌 Project Title and Brief Description
 
-## Problem Statement/Objective
-**Problem Statement:** If a driver gets tired, they can lose attention on the road, especially on long night trips. Many existing student projects only check for closed eyes and just give a basic beep sound, which is not enough to ensure safety[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span).
-**Objective:** To build a working safety prototype that monitors the driver, warns them, automatically controls the car's music, and saves the events for history tracking[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span).
+Smart Driver Drowsiness & Safety System is a C++-based driver safety prototype designed to monitor the driver in real time, detect possible drowsiness and distraction, and provide appropriate safety responses.
 
-## Major Features/Modules
-* **Drowsiness & Distraction Detection:** Checks if the driver's eyes stay closed for too long or if they look away from the road[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span).
-* **Smart Alerts:** Gives a normal warning first, and a loud alarm if the driver ignores it[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span).
-* **Automatic Music Control:** Pauses or lowers the car's music volume during the warning so the alert can be heard[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span).
-* **Emergency SMS:** Sends a text message to a saved family contact in critical cases[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span).
-* **Status Tracking:** Displays live status (Good, Warning, Critical) and saves event history[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span).
+The system uses computer vision to analyze the driver's eyes and attention, provides multi-level alerts, controls the vehicle's music during warnings, sends an emergency SMS in critical situations, and maintains a record of safety events.
 
-## Technologies/Tools Used
-* **Programming Language:** C++[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)
-* **Computer Vision:** OpenCV for real-time face and eye tracking[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)
-* **Database:** SQLite for storing driver details, contacts, and past records[span_22](start_span)[span_22](end_span)[span_23](start_span)[span_23](end_span)
-* **Data Structures:** Linked List (history), Queue (events), and Stack (recent alerts)[span_24](start_span)[span_24](end_span)[span_25](start_span)[span_25](end_span)
-* **Development Tools:** VS Code, Git, and GitHub[span_26](start_span)[span_26](end_span)[span_27](start_span)[span_27](end_span)
+---
 
-## Project Setup/Installation Instructions
-1. **Prerequisites:** Ensure you have a C++ compiler, OpenCV library, and SQLite3 installed on your machine.
-2. **Clone the Repository:** 
-   `git clone https://github.com/ridvik74/Smart-Driver-Drowsiness-Safety-System.git`
-3. **Compile:** Compile the C++ source files, making sure to link both the OpenCV and SQLite libraries.
-4. **Run:** Execute the compiled program to start the camera monitoring and safety system.
+🎯 Problem Statement/Objective
 
-## Current Project Status/Progress
-* **Phase-I (Completed):** Project planning, basic design, and system architecture are finished[span_28](start_span)[span_28](end_span)[span_29](start_span)[span_29](end_span).
-* **Current Progress:** Requirements and modules have been finalized. The SQLite database tables have been created, and basic camera input with OpenCV has been successfully tested[span_30](start_span)[span_30](end_span)[span_31](start_span)[span_31](end_span).
+⚠️ Problem Statement
 
-## Team Members
-* **Team Name:** Smart Safety Team (ID: DSCPP-III-2026-T234)[span_32](start_span)[span_32](end_span)[span_33](start_span)[span_33](end_span)
-* **Mentor:** Mr. Kamal Kumar Gola[span_34](start_span)[span_34](end_span)[span_35](start_span)[span_35](end_span)
-* **Ridvik Garg (Team Lead):** Core Logic & Architecture[span_36](start_span)[span_36](end_span)[span_37](start_span)[span_37](end_span)
-* **Prabhav Gulyani:** OpenCV Drowsiness Code[span_38](start_span)[span_38](end_span)[span_39](start_span)[span_39](end_span)
-* **Nandini Gupta:** SQLite & Distraction Code[span_40](start_span)[span_40](end_span)[span_41](start_span)[span_41](end_span)
-* **Antriksh Gehlot:** Music Control & Alerts[span_42](start_span)[span_42](end_span)[span_43](start_span)[span_43](end_span)
-*
+Driver fatigue and distraction can significantly reduce attention, especially during long-distance and night-time driving. Many basic driver-monitoring systems only detect closed eyes and provide a simple beep, which provides limited safety functionality.
+
+🎯 Objective
+
+The objective of this project is to develop a working driver-safety prototype that:
+
+- Detects driver drowsiness through eye monitoring.
+- Detects possible driver distraction.
+- Provides appropriate warning and critical alerts.
+- Automatically pauses or lowers music during alerts.
+- Sends an emergency SMS to a saved family contact in critical situations.
+- Displays the driver's current safety status.
+- Stores safety events for history tracking.
+
+---
+
+👥 Team Members
+
+Team Name: Smart Safety Team
+Team ID: "DSCPP-III-2026-T234"
+
+Mentor: Mr. Kamal Kumar Gola
+
+- Ridvik Garg (Team Lead) — Core Logic & System Architecture
+- Prabhav Gulyani — OpenCV Drowsiness Detection
+- Nandini Gupta — SQLite & Distraction Detection
+- Antriksh Gehlot — Music Control & Alerts
+---
+
+🛠️ Technologies/Tools Used
+
+Technology/Tool| Purpose
+C++| Core system development
+OpenCV| Real-time face and eye tracking
+SQLite| Driver details, contacts, and event-history storage
+Linked List| Managing safety history
+Queue| Managing safety events
+Stack| Managing recent alerts
+VS Code| Development environment
+Git| Version control
+GitHub| Repository management and collaboration
+
+---
+
+⚙️ Project Setup/Installation Instructions
+
+📋 Prerequisites
+
+Ensure the following are installed on your system:
+
+- C++ compiler
+- OpenCV
+- SQLite3
+- VS Code
+- Git
+
+📥 Clone the Repository
+
+git clone https://github.com/ridvik74/Smart-Driver-Drowsiness-Safety-System.git
+
+📂 Navigate to the Project Directory
+
+cd Smart-Driver-Drowsiness-Safety-System
+
+🔧 Configure Dependencies
+
+Configure the OpenCV and SQLite3 libraries according to your operating system and C++ development environment.
+
+💻 Compile the Project
+
+Compile the C++ source files while linking the required OpenCV and SQLite3 libraries.
+
+▶️ Run the Project
+
+After successful compilation, execute the generated program to start the camera-based driver monitoring and safety system.
+
+---
+
+🚨 Major Features/Modules
+
+👁️ 1. Drowsiness Detection
+
+Uses OpenCV-based camera monitoring to detect prolonged eye closure and identify possible signs of driver drowsiness.
+
+👀 2. Distraction Detection
+
+Monitors the driver's facial orientation and attention to identify possible cases where the driver looks away from the road.
+
+🔔 3. Smart Alert System
+
+Provides different levels of safety alerts based on the detected driver condition:
+
+- 🟢 Good: Driver appears attentive.
+- 🟡 Warning: Possible drowsiness or distraction detected.
+- 🔴 Critical: The condition continues without an appropriate response.
+
+🎵 4. Automatic Music Control
+
+During warnings, the system can pause or lower the vehicle's music volume so that safety alerts can be clearly heard.
+
+📱 5. Emergency SMS
+
+In critical situations, the system can send an SMS notification to a predefined family contact.
+
+📊 6. Status Tracking & Event History
+
+Displays the current driver status and stores detected safety events for future history tracking.
+
+---
+
+📈 Current Project Status/Progress
+
+✅ Phase-I — Completed
+
+- Project planning completed.
+- Basic system design completed.
+- System architecture completed.
+- Project requirements finalized.
+- Major modules identified and planned.
+
+🚧 Current Progress
+
+- SQLite database tables have been created.
+- Basic camera input using OpenCV has been successfully tested.
+- Module responsibilities have been finalized.
+- Drowsiness detection module is under development.
+- Distraction detection module is under development.
+- Alert, music-control, and emergency-SMS modules are under development.
+- Final system integration and testing are pending.
