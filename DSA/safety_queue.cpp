@@ -1,5 +1,4 @@
-#include <iostream>
-using namespace std;
+#include <stdio.h>
 
 #define MAX 50
 
@@ -11,7 +10,7 @@ void enqueue(int x)
 {
     if(rear == MAX - 1)
     {
-        cout << "Queue is full" << endl;
+        printf("Queue is full\n");
         return;
     }
 
@@ -26,26 +25,20 @@ void dequeue()
 {
     if(front == -1 || front > rear)
     {
-        cout << "Queue is empty" << endl;
+        printf("Queue is empty\n");
         return;
     }
 
-    cout << "Processed event: " << q[front] << endl;
+    printf("Processed event: %d\n", q[front]);
     front++;
 }
 
 void display()
 {
-    if(front == -1 || front > rear)
-    {
-        cout << "Queue is empty" << endl;
-        return;
-    }
+    int i;
 
-    for(int i = front; i <= rear; i++)
-    {
-        cout << q[i] << " ";
-    }
+    for(i = front; i <= rear; i++)
+        printf("%d ", q[i]);
 }
 
 int main()
@@ -54,11 +47,10 @@ int main()
     enqueue(2);
     enqueue(3);
 
-    cout << "Safety Events: ";
+    printf("Safety Events: ");
     display();
 
-    cout << endl;
-
+    printf("\n");
     dequeue();
 
     return 0;
