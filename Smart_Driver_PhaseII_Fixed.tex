@@ -1,0 +1,731 @@
+\documentclass[12pt,a4paper]{article}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+\usepackage[
+    a4paper,
+    top=1.55cm,
+    bottom=1.35cm,
+    left=1.75cm,
+    right=1.75cm
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext}
+\usepackage{graphicx} % Actual photos will be displayed
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{eso-pic}
+\usepackage{ragged2e}
+\usepackage{url}
+
+% ============================================================
+% COLORS
+% ============================================================
+\definecolor{GEUBlue}{RGB}{43,91,145}
+\definecolor{GEUBannerBlue}{RGB}{0,102,148}
+\definecolor{GEUYellow}{RGB}{255,201,38}
+\definecolor{InstructionGrey}{RGB}{125,125,125}
+
+% ============================================================
+% GENERAL SETTINGS
+% ============================================================
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\renewcommand{\arraystretch}{1.4}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+
+% ============================================================
+% HEADER / FOOTER
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{%
+    \fontsize{10.5}{12}\selectfont
+    DSCPP-III-2026
+}
+
+\fancyhead[R]{%
+    \fontsize{10.5}{12}\selectfont
+    PHASE-II PROJECT PROGRESS
+}
+
+\fancyfoot[R]{%
+    \fontsize{10}{12}\selectfont
+    Page \thepage
+}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\headheight}{20pt}
+\setlength{\headsep}{0.65cm}
+\setlength{\footskip}{0.65cm}
+
+% ============================================================
+% BOTTOM YELLOW LINE
+% ============================================================
+\AddToShipoutPictureBG{%
+    \begin{tikzpicture}[remember picture,overlay]
+        \fill[GEUYellow]
+            (current page.south west)
+            rectangle
+            ([yshift=0.14cm]current page.south east);
+    \end{tikzpicture}%
+}
+
+% ============================================================
+% CUSTOM COMMANDS
+% ============================================================
+\newcommand{\sectiontitle}[1]{%
+    {\color{GEUBlue}\fontsize{18}{22}\selectfont #1}%
+}
+
+\newcommand{\answerbox}[2]{%
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|}
+        \hline
+        \parbox[t][#1][t]{\dimexpr\linewidth-12pt\relax}{%
+            \vspace{5pt}
+            \fontsize{11.5}{14}\selectfont #2
+        }\\
+        \hline
+    \end{tabularx}%
+}
+
+% ============================================================
+% DOCUMENT
+
+% ============================================================
+\begin{document}
+% ============================================================
+% PAGE 1
+% ============================================================
+
+% ============================================================
+% PROJECT AND TEAM INFORMATION
+% ============================================================
+\vspace*{0.10cm}
+
+\IfFileExists{geulogo.png}{\includegraphics[width=8.0cm]{geulogo.png}}{\textbf{Graphic Era University}}
+
+\vspace{0.35cm}
+
+\noindent
+\colorbox{GEUBannerBlue}{%
+    \parbox{\dimexpr\textwidth-2\fboxsep\relax}{%
+        \vspace{0.17cm}
+        {\color{GEUYellow}
+        \fontsize{16.5}{20}\selectfont
+        \bfseries PROJECT AND TEAM INFORMATION}
+        \vspace{0.17cm}
+    }%
+}
+
+\vspace{0.35cm}
+
+\sectiontitle{Project Title}
+
+\vspace{0.20cm}
+
+\answerbox{0.82cm}{%
+    \textbf{\fontsize{11.5}{14}\selectfont
+    Smart Driver Drowsiness \& Safety System}
+}
+
+\vspace{0.35cm}
+
+\noindent
+\begin{tabularx}{\textwidth}{
+    |>{\RaggedRight\arraybackslash}p{0.62\textwidth}
+    |>{\centering\arraybackslash}X|
+}
+\hline
+
+\begin{minipage}[t]{\linewidth}
+    \vspace{1.5mm}
+    \textit{Team Name: \textbf{Smart Safety Team}}\\[-1mm]
+    \textit{Team \#: \textbf{DSCPP-III-2026-T234}}
+    \vspace{1.5mm}
+\end{minipage}
+&
+\begin{minipage}[t]{\linewidth}
+    \vspace{1.5mm}
+    \textit{PHOTO}
+    \vspace{1.5mm}
+\end{minipage}
+\\
+\hline
+
+% TEAM MEMBER 1
+\begin{minipage}[t]{\linewidth}
+    \vspace{1.5mm}
+    \textbf{Team Member 1 (Team Lead)}\\[0.5mm]
+    \textit{Name: RIDVIK GARG}\\
+    \textit{University Roll No.: 2028039}\\
+    \textit{Section: H}\\
+    \textit{Email: ridvikridvik74@gmail.com}
+    \vspace{1.5mm}
+\end{minipage}
+&
+\begin{minipage}[t][2.9cm][c]{\linewidth}
+    \centering
+    \IfFileExists{member1.png}{\includegraphics[width=2.7cm,height=2.7cm,keepaspectratio]{member1.png}}{\fbox{\parbox[c][2.4cm][c]{2.4cm}{\centering Upload photo}}}
+\end{minipage}
+\\
+\hline
+
+% TEAM MEMBER 2
+\begin{minipage}[t]{\linewidth}
+    \vspace{1.5mm}
+    \textbf{Team Member 2}\\[0.5mm]
+    \textit{Name: Prabhav Gulyani}\\
+    \textit{University Roll No.: 2027975}\\
+    \textit{Section: E}\\
+    \textit{Email: Prabhav7424@gmail.com}
+    \vspace{1.5mm}
+\end{minipage}
+&
+\begin{minipage}[t][2.9cm][c]{\linewidth}
+    \centering
+    \IfFileExists{member2.png}{\includegraphics[width=2.7cm,height=2.7cm,keepaspectratio]{member2.png}}{\fbox{\parbox[c][2.4cm][c]{2.4cm}{\centering Upload photo}}}
+\end{minipage}
+\\
+\hline
+
+% TEAM MEMBER 3
+\begin{minipage}[t]{\linewidth}
+    \vspace{1.5mm}
+    \textbf{Team Member 3}\\[0.5mm]
+    \textit{Name: Nandini Gupta}\\
+    \textit{University Roll No.: 2028777}\\
+    \textit{Section: ML4}\\
+    \textit{Email: nandinigupta787@gmail.com}
+    \vspace{1.5mm}
+\end{minipage}
+&
+\begin{minipage}[t][2.9cm][c]{\linewidth}
+    \centering
+    \IfFileExists{member3.png}{\includegraphics[width=2.7cm,height=2.7cm,keepaspectratio]{member3.png}}{\fbox{\parbox[c][2.4cm][c]{2.4cm}{\centering Upload photo}}}
+\end{minipage}
+\\
+\hline
+
+% TEAM MEMBER 4
+\begin{minipage}[t]{\linewidth}
+    \vspace{1.5mm}
+    \textbf{Team Member 4}\\[0.5mm]
+    \textit{Name: Antriksh Gehlot}\\
+    \textit{University Roll No.: 2028648}\\
+    \textit{Section: ML3}\\
+    \textit{Email: antrikshgehlot9290@gmail.com}
+    \vspace{1.5mm}
+\end{minipage}
+&
+\begin{minipage}[t][2.9cm][c]{\linewidth}
+    \centering
+    \IfFileExists{member4.png}{\includegraphics[width=2.7cm,height=2.7cm,keepaspectratio]{member4.png}}{\fbox{\parbox[c][2.4cm][c]{2.4cm}{\centering Upload photo}}}
+\end{minipage}
+\\
+\hline
+\end{tabularx}
+
+\vspace{0.20cm}
+
+\noindent
+\textit{Mentor: Mr. Kamal Kumar Gola}
+
+\vspace{0.35cm}
+
+% ============================================================
+% PROJECT PROGRESS DESCRIPTION - PAGE 2
+% ============================================================
+
+\newpage
+
+\noindent
+\colorbox{GEUBannerBlue}{%
+    \parbox{\dimexpr\textwidth-2\fboxsep\relax}{%
+        \vspace{0.15cm}
+        {\color{GEUYellow}
+        \fontsize{16}{19}\selectfont
+        \bfseries PHASE-II PROJECT PROGRESS DESCRIPTION (35 pts)}
+        \vspace{0.15cm}
+    }%
+}
+
+\vspace{0.30cm}
+
+% ============================================================
+% PROJECT ABSTRACT
+% ============================================================
+
+\sectiontitle{Project Abstract }
+
+\vspace{0.20cm}
+
+\noindent
+\fbox{%
+    \parbox[t]{
+        \dimexpr\textwidth-2\fboxsep-2\fboxrule\relax
+    }{%
+        \vspace{10pt}
+        \hspace{2pt}%
+        \begin{minipage}{\dimexpr\linewidth-4pt\relax}
+            \fontsize{12}{18}\selectfont
+            \setlength{\parskip}{10pt}
+            \justifying
+
+            The main idea behind our Smart Driver Drowsiness \& Safety
+            System is to prevent accidents caused by sleepy or distracted
+            drivers. We are capturing a live video feed from a webcam to
+            track the driver's face. The system specifically looks at eye
+            closures and head positions. It won't beep for every small
+            movement. Instead, the code verifies if the eyes remain closed
+            for a longer duration to confirm an actual threat.
+
+            We have designed a step-by-step alert mechanism. First, a
+            normal beep plays. If the driver ignores it, a loud alarm
+            triggers. We also planned a feature to reduce the car's music
+            volume so the driver can hear the warning clearly. In extreme
+            cases, an emergency SMS goes out.
+
+            After the Phase-I evaluation, we updated our code to properly
+            implement Data Structures. The project now uses a Queue for
+            incoming safety events, a Stack for recent alerts, and a
+            Linked List to maintain the history. The entire logic is
+            written in C++, with OpenCV handling camera inputs and
+            SQLite managing the database.
+        \end{minipage}
+
+        \vspace{10pt}
+    }%
+}
+
+\vspace{0.30cm}
+
+% ============================================================
+% UPDATED PROJECT APPROACH AND ARCHITECTURE
+% ============================================================
+
+\sectiontitle{Updated Project Approach and Architecture}
+
+\vspace{0.20cm}
+
+\noindent
+\fbox{%
+    \parbox[t]{
+        \dimexpr\textwidth-2\fboxsep-2\fboxrule\relax
+    }{%
+        \vspace{10pt}
+        \hspace{2pt}%
+        \begin{minipage}{\dimexpr\linewidth-4pt\relax}
+            \fontsize{12}{18}\selectfont
+            \setlength{\parskip}{10pt}
+            \justifying
+
+            We divided the project into separate modules. This makes it
+            easier to test each part before we combine everything. The
+            process starts with the camera capturing the driver's face.
+            When our OpenCV logic spots prolonged eye closure, it generates
+            a safety event and forwards it to the main application.
+
+            Based on our mentor's feedback in Phase-I, we changed how we
+            handle data. We now apply DSA concepts directly. Incoming
+            events are pushed into a Queue so they process in the right
+            order. We manage the UI warnings using a Stack, which ensures
+            the latest alerts show up on top. A Linked List is used to
+            keep a record of all past events.
+
+            Once an event is handled, the backend decides the appropriate
+            action. This could be triggering an alarm, pausing the music,
+            or sending a text message. C++ runs the core operations,
+            OpenCV takes care of video frames, and SQLite stores our data.
+        \end{minipage}
+
+        \vspace{10pt}
+    }%
+}
+
+\vspace{0.35cm}
+\newpage
+% ============================================================
+% TASKS COMPLETED
+% ============================================================
+\sectiontitle{Tasks Completed}
+
+\vspace{0.20cm}
+
+\noindent
+\begin{tabularx}{\textwidth}{
+    |>{\raggedright\arraybackslash}p{0.66\textwidth}
+    |>{\raggedright\arraybackslash}X|
+}
+\hline
+\textbf{Task Completed} & \textbf{Team Member}
+\\
+\hline
+Finalized the main requirements and split the project into smaller modules.
+& All Team Members
+\\
+\hline
+Updated the architecture to use Queues, Stacks, and Linked Lists.
+& Ridvik / Prabhav
+\\
+\hline
+Set up the C++ repository and got the development environment ready.
+& All Team Members
+\\
+\hline
+Wrote the initial code for handling safety events and maintaining logs.
+& Ridvik / Prabhav
+\\
+\hline
+Tested the webcam input and verified basic face tracking with OpenCV.
+& Prabhav / Nandini
+\\
+\hline
+Created the SQLite database and tested simple insert/read queries.
+& Nandini / Antriksh
+\\
+\hline
+\end{tabularx}
+
+\vspace{0.35cm}
+
+% ============================================================
+% CHALLENGES / ROADBLOCKS
+% ============================================================
+\sectiontitle{Challenges/Roadblocks}
+
+\vspace{0.20cm}
+
+\noindent
+\fbox{%
+    \parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}{%
+        \vspace{8pt}
+        \fontsize{11}{14}\selectfont
+
+        \textbf{1. Lighting conditions:}
+        OpenCV struggles to track eyes if the room is dark or if the
+        driver wears spectacles. We are experimenting with different
+        Eye Aspect Ratio (EAR) values to fix this.
+
+        \vspace{5pt}
+
+        \textbf{2. DSA implementation:}
+        Replacing standard vectors with our own custom Queue and Stack
+        classes took a lot of extra time and caused some bugs initially.
+
+        \vspace{5pt}
+
+        \textbf{3. Module integration:}
+        Linking the C++ backend with the OpenCV feed and database often
+        leads to crashes. We are doing module-by-module testing to
+        catch memory leaks early.
+
+        \vspace{5pt}
+
+        \textbf{4. System lag:}
+        Processing live video is heavy on the CPU. Dropping frames
+        delays the alerts, so we have to optimize our code for better speed.
+
+        \vspace{5pt}
+
+        \textbf{5. Realistic testing:}
+        Faking drowsiness by blinking slowly isn't very accurate.
+        We need to collect diverse test videos to see if the detection
+        actually works in real life.
+
+        \vspace{8pt}
+    }%
+}
+
+\vspace{0.35cm}
+
+% ============================================================
+% TASKS PENDING
+% ============================================================
+\sectiontitle{Tasks Pending}
+
+\vspace{0.20cm}
+
+\noindent
+\begin{tabularx}{\textwidth}{
+    |>{\raggedright\arraybackslash}p{0.66\textwidth}
+    |>{\raggedright\arraybackslash}X|
+}
+\hline
+\textbf{Task Pending} &
+\textbf{Team Member (to complete the task)}
+\\
+\hline
+Adjust the eye-tracking logic and link it with the main event Queue.
+& Prabhav / Nandini
+\\
+\hline
+Finish debugging the custom Stack and Linked List classes.
+& Ridvik / Prabhav
+\\
+\hline
+Write the code to trigger different sound alerts based on severity.
+& Prabhav / Antriksh
+\\
+\hline
+Create a script to lower or pause background music during warnings.
+& Nandini / Antriksh
+\\
+\hline
+Set up the SMS API to send texts to emergency contacts.
+& Antriksh
+\\
+\hline
+Merge all the modules, find bugs, and conduct full testing.
+& All Team Members
+\\
+\hline
+\end{tabularx}
+
+\vspace{0.35cm}
+\newpage
+
+
+\definecolor{GEUBlue}{RGB}{43,91,145}
+\definecolor{GEUBannerBlue}{RGB}{0,102,148}
+\definecolor{GEUYellow}{RGB}{255,201,38}
+\definecolor{InstructionGrey}{RGB}{125,125,125}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\renewcommand{\arraystretch}{1.4}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\fontsize{10.5}{12}\selectfont DSCPP-III-2026}
+\fancyhead[R]{\fontsize{10.5}{12}\selectfont PHASE-II PROJECT PROGRESS}
+\fancyfoot[R]{\fontsize{10}{12}\selectfont Page \thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{20pt}
+\setlength{\headsep}{0.65cm}
+\setlength{\footskip}{0.65cm}
+
+\AddToShipoutPictureBG{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[GEUYellow] (current page.south west) rectangle ([yshift=0.14cm]current page.south east);
+  \end{tikzpicture}%
+}
+
+\newcommand{\sectiontitle}[1]{{\color{GEUBlue}\fontsize{18}{22}\selectfont #1}}
+\newcommand{\instruction}[1]{{\color{InstructionGrey}\fontsize{10.5}{13}\selectfont #1}}
+
+\newcommand{\largeanswerbox}[2]{%
+  \noindent\fbox{%
+    \parbox[t][#1][t]{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}{%
+      \vspace{7pt}%
+      \hspace{2pt}\begin{minipage}{\dimexpr\linewidth-4pt\relax}%
+        \fontsize{12}{19}\selectfont
+        \setlength{\parskip}{14pt}%
+        \justifying
+        #2
+      \end{minipage}%
+      \vspace{10pt}%
+    }%
+  }%
+}
+
+
+% PAGE 4 -- replace this page section in the full document.
+% Keep the \newpage before this section and the \newpage after it
+% from the original 5-page document.
+
+\vspace*{0.30cm}
+
+\sectiontitle{Project Outcome/Deliverables (2 pts)}
+
+\vspace{0.50cm}
+
+\largeanswerbox{8.0cm}{%
+By the end of this semester, we plan to deliver a fully functional prototype of our smart safety system. Through webcam monitoring, the software will detect driver fatigue and respond with different actions like sounding an alarm, muting background music, or sending an SMS.
+
+Apart from the actual software, this project is helping us understand how to apply standard Data Structures (like Stacks, Queues, and Linked Lists) inside a real-time application.
+
+For our final college submission, we will provide the C++ source code, the OpenCV detection scripts, the SQLite database, our testing logs, the project report, and a public GitHub link containing all our files.%
+}
+
+\vspace{0.45cm}
+
+\sectiontitle{Progress Overview }
+
+\vspace{0.40cm}
+
+\largeanswerbox{8.0cm}{%
+We have completed the planning phase and revised our system architecture based on the Phase-I review. The core setup is done. The C++ environment compiles successfully, the camera feed works, and the database tables are ready. Recently, we focused on rewriting the event handler using Stacks, Queues, and Linked Lists.
+
+At present, we are spending our time coding and fixing bugs. The eye tracking works fine under good lighting, but we are still adjusting it for low-light conditions. We also started working on the audio alerts and SMS integration.
+
+Since we are developing the modules separately, a fully combined prototype is not ready yet. In the upcoming weeks, we will link the OpenCV triggers with our C++ backend to ensure the alerts work without delay.%
+}
+
+
+
+% ============================================================
+% CODEBASE INFORMATION
+% ============================================================
+\newpage
+\sectiontitle{Codebase Information}
+
+\vspace{0.20cm}
+
+\noindent
+\fbox{%
+    \parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}{%
+        \vspace{8pt}
+        \fontsize{11.5}{14.5}\selectfont
+
+        \textbf{GitHub Repository:}
+
+        \url{https://github.com/ridvik74/Smart-Driver-Drowsiness-Safety-System}
+
+        \vspace{6pt}
+
+        \textbf{Repository Status:} Public
+
+        \textbf{Main Branch:} main
+
+        \vspace{6pt}
+
+        To manage the code better, we split the tasks among the team.
+        Some of us are working on the C++ logic, while others handle
+        the database and camera scripts. Every member pushes their
+        updates from their own GitHub account to keep a clear record
+        of individual work.
+
+        \vspace{6pt}
+
+        \textbf{Important development areas:}
+        Right now, the major development areas in our repository are
+        the custom DSA headers (Queue, Stack, Linked List), the camera
+        processing script, and the alert generation logic.
+
+        \vspace{8pt}
+    }%
+}
+
+\vspace{0.35cm}
+
+% ============================================================
+% TESTING AND VALIDATION
+% ============================================================
+\sectiontitle{Testing and Validation Status}
+
+\vspace{0.20cm}
+
+\noindent
+\begin{tabularx}{\textwidth}{
+    |>{\raggedright\arraybackslash}p{0.30\textwidth}
+    |>{\raggedright\arraybackslash}p{0.22\textwidth}
+    |>{\raggedright\arraybackslash}X|
+}
+\hline
+\textbf{Test Type} & \textbf{Status} & \textbf{Notes}
+\\
+\hline
+C++ Environment & Pass &
+Checked the build files; they compile fine on our laptops.
+\\
+\hline
+Webcam Capture & Pass &
+Camera turns on and OpenCV captures video without crashing.
+\\
+\hline
+DB Initialization & Pass &
+Database is ready. We can insert and fetch records.
+\\
+\hline
+DSA Integration & In Progress &
+Custom classes are done, but we are fixing some memory leaks.
+\\
+\hline
+EAR/Vision Logic & In Progress &
+Works in good light, still adjusting the code for darker rooms.
+\\
+\hline
+Integration Testing & Pending &
+Waiting for all modules to finish before final merging.
+\\
+\hline
+\end{tabularx}
+
+\vspace{0.35cm}
+
+% ============================================================
+% DELIVERABLES PROGRESS
+% ============================================================
+\sectiontitle{Deliverables Progress}
+
+\vspace{0.15cm}
+
+\noindent
+\fbox{%
+\parbox[t][6.4cm][t]{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}{
+\vspace{5pt}
+\fontsize{10.8}{13}\selectfont
+
+\textbf{Requirements \& Planning:} Done
+
+\vspace{2pt}
+
+\textbf{Phase-I Architecture Redesign:} Done
+
+\vspace{2pt}
+
+\textbf{C++ Backend Setup:} Working on it
+
+\vspace{2pt}
+
+\textbf{DSA (Queue, Stack, Linked List) Logic:} Working on it
+
+\vspace{2pt}
+
+\textbf{OpenCV Vision Module:} Working on it
+
+\vspace{2pt}
+
+\textbf{SQLite Database:} Working on it
+
+\vspace{2pt}
+
+\textbf{Audio Alerts \& Music Mute:} Working on it
+
+\vspace{2pt}
+
+\textbf{SMS Emergency Feature:} Not started yet
+
+\vspace{2pt}
+
+\textbf{Final System Integration:} Not started yet
+
+\vspace{2pt}
+
+\textbf{Live Environment Testing:} Not started yet
+
+\vspace{2pt}
+
+\textbf{Final Report \& Documentation:} Not started yet
+
+\vspace{2pt}
+
+\textbf{GitHub Repo Maintenance:} Ongoing (Public)
+
+\vspace{5pt}
+}}
+
+\end{document}
