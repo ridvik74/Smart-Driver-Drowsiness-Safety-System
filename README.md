@@ -1,97 +1,47 @@
-# 🚗 Smart Driver Drowsiness & Safety System
+# Smart Driver Drowsiness & Safety System
 
-## 📌 About the Project
+## Project Overview
+The Smart Driver Drowsiness & Safety System is a C++ based project designed to monitor a driver's face and eyes through a webcam. It identifies possible drowsiness-related conditions and displays safety status on the screen.
 
-The **Smart Driver Drowsiness & Safety System** is a student project developed to improve driver safety. It aims to identify unsafe driving conditions and provide suitable warnings to the driver.
+## Features
+- Face and eye detection using OpenCV.
+- Three safety states: Safe, Warning, and Critical.
+- Event records saved using SQLite.
+- Queue, stack, searching, sorting, and linked-list modules implemented in C.
+- Emergency alert message displayed and logged when a critical event is detected.
+- Driver event history maintained for review.
 
-The current prototype uses C++ to check eye-closure and distraction levels entered by the user. It displays one of three safety statuses: **Safe, Warning, or Critical**. OpenCV is used to access the webcam and display live video.
+## Technology Stack
+- C++
+- C
+- OpenCV
+- SQLite
+- Data Structures
+- Visual Studio Code
+- GitHub
 
-The project also uses Data Structures and Algorithms to manage safety events, recent alerts, and event history.
+## Project Structure
+- `main.cpp` — Main program
+- `database.cpp` — Database operations
+- `emergency.cpp` — Emergency alert handling
+- `CAMERA/camera.cpp` — Camera and face/eye detection
+- `DSA/events.c` — Event queue
+- `DSA/linkedlist.c` — Event history linked list
+- `DSA/searching.c` — Event searching
+- `DSA/sorting.c` — Event sorting
+- `DSA/stack.c` — Alert stack
 
-## 🎯 Objectives
+## How to Run
+1. Install a C/C++ compiler.
+2. Install OpenCV and SQLite development libraries.
+3. Open the project folder in Visual Studio Code or a compatible terminal.
+4. Compile the source files with the required OpenCV and SQLite libraries.
+5. Run the generated executable and allow camera access.
 
-- Identify possible driver drowsiness and distraction.
-- Display safety status based on input values.
-- Provide warning messages for unsafe conditions.
-- Manage safety events using data structures.
-- Integrate C, C++, OOP, DSA, and OpenCV in one project.
+## Current Limitations
+- Detection depends on camera quality, lighting, and face visibility.
+- The emergency alert currently displays/logs an alert; it does not automatically send a real SMS.
+- This project is a student prototype and is not a certified vehicle safety system.
 
-## 🛠️ Technology Stack
-
-- **C:** Data Structures implementation
-- **C++:** Main application and safety logic
-- **OOP:** Driver information and safety-checking class
-- **DSA:** Queue, Stack, and Linked List
-- **OpenCV:** Webcam access and live video display
-- **Visual Studio Code:** Development environment
-- **GitHub:** Source code and project version control
-
-## ⚙️ Main Features
-
-1. **Safety Status:** Displays Safe, Warning, or Critical according to the entered values.
-2. **Webcam Integration:** Opens the webcam and displays a live video feed.
-3. **Queue:** Stores safety event codes.
-4. **Stack:** Maintains recent alerts.
-5. **Linked List:** Maintains event history.
-6. **Modular Design:** Separates the main application, camera, and DSA code.
-
-## 📂 Project Structure
-
-```text
-Smart-Driver-Drowsiness-Safety-System/
-│
-├── DSA/
-│   ├── events.c
-│   ├── stack.c
-│   └── linkedlist.c
-│
-├── Phase-I/
-│   ├── Report.pdf
-│   ├── Report_Source_Code.tex
-│   └── PPT_Source_Code.tex
-│
-├── Phase-II/
-│   ├── Smart_Driver_PhaseII_Fixed.tex
-│   └── Report.pdf
-│
-├── CAMERA/
-│   └── camera.cpp
-│
-├── main.cpp
-└── README.md
-```
-
-*Note: The file names above are the intended organization. Keep the README consistent with the actual files present in the repository.*
-
-## ▶️ Current Implementation
-
-The current prototype checks user-entered eye-closure and distraction levels, displays a safety status, and calls the DSA functions to record events and alerts. The webcam module displays live video using OpenCV.
-
-## 🚀 Future Improvements
-
-- Improve automatic drowsiness detection through camera input.
-- Add and test searching and sorting operations for event records.
-- Improve event history and safety monitoring.
-- Test the complete application with different inputs and conditions.
-
-## 👥 Team Details
-
-**Team Name:** Smart Safety Team  
-**Team ID:** DSCPP-III-2026-T234
-
-- **Ridvik Garg** — Team Lead
-- **Prabhav Gulyani** — Team Member
-- **Nandini Gupta** — Team Member
-- **Antriksh Gehlot** — Team Member
-
-## 📄 Project Documents
-
-- **Phase-I:** Project report and presentation
-- **Phase-II:** Implementation report, source code, and presentation
-
-Please refer to the respective folders for available project documents.
-
----
-
-**Project:** Smart Driver Drowsiness & Safety System  
-**University:** Graphic Era Deemed to be University, Dehradun
+## Project Status
+The project demonstrates webcam-based monitoring, safety-state detection, event storage, and data-structure operations.
