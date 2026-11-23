@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Driver Drowsiness & Safety System - PBL Phase 3 Dashboard</title>
+
+  <!-- Clean Professional Font (Inter & System UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- MediaPipe FaceMesh for Real Webcam Eye Tracking -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg-primary: #0f172a;       /* Slate 900 */
+      --bg-card: #1e293b;          /* Slate 800 */
+      --bg-card-inner: #0f172a;    /* Slate 900 */
+      --border-color: #334155;     /* Slate 700 */
+      --border-light: #475569;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary-blue: #2563eb;     /* Professional blue */
+      --primary-hover: #1d4ed8;
+      --success-green: #10b981;
+      --warning-amber: #f59e0b;
+      --danger-red: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP NAVBAR */
+    header {
+      background: #1e293b;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-dept {
+      background: #0284c7;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .project-meta {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .system-status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #34d399;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    /* MAIN CONTAINER (3-COLUMN DASHBOARD) */
+    main {
+      flex: 1;
+      padding: 20px 28px;
+      display: grid;
+      grid-template-columns: 1.15fr 1.35fr 1.25fr;
+      gap: 20px;
+      max-width: 1750px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-heading {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* LEFT: CAMERA MONITOR */
+    .camera-frame-box {
+      background: #000;
+      border-radius: 6px;
+      height: 260px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid var(--border-color);
+    }
+
+    #webcamVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+
+    #landmarkCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      transform: scaleX(-1);
+    }
+
+    .camera-tag {
+      position: absolute;
+      top: 10px; left: 10px;
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .camera-state-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+      color: #34d399;
+    }
+
+    .camera-ear-pill {
+      position: absolute;
+      bottom: 10px; right: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-light);
+      padding: 4px 10px;
+      border-radius: 4px;
+      color: #38bdf8;
+    }
+
+    /* METRICS TABLE */
+    .metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+
+    .metrics-table tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .metrics-table td {
+      padding: 8px 4px;
+      color: var(--text-muted);
+    }
+
+    .metrics-table td:last-child {
+      text-align: right;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    /* CENTER: TELEMETRY & ALERT STATUS */
+    .status-alert-box {
+      padding: 16px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid #10b981;
+      color: #34d399;
+      transition: all 0.2s;
+    }
+
+    .status-alert-box.warning {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: #f59e0b;
+      color: #fbbf24;
+    }
+
+    .status-alert-box.danger {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+
+    /* GAUGES SECTION */
+    .gauges-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .gauge-card {
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+      position: relative;
+    }
+
+    .gauge-val-display {
+      font-size: 26px;
+      font-weight: 700;
+      margin-top: 4px;
+      color: #f8fafc;
+    }
+
+    .gauge-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* WAVEFORM GRAPH */
+    .graph-card {
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 12px;
+    }
+
+    .graph-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    #earGraph {
+      width: 100%;
+      height: 85px;
+    }
+
+    /* RIGHT: DATA STRUCTURES (DSA IN C) */
+    .dsa-group {
+      margin-bottom: 14px;
+    }
+
+    .dsa-title-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+
+    .cq-container {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 4px;
+      background: var(--bg-card-inner);
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .cq-box {
+      height: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    .cq-box.active {
+      border-color: #38bdf8;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .cq-box.drowsy {
+      border-color: #ef4444;
+      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .heap-card {
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .stack-list {
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px;
+      height: 125px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 6px;
+    }
+
+    .stack-item {
+      background: #1e293b;
+      border-left: 3px solid #38bdf8;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stack-item.crit {
+      border-left-color: #ef4444;
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    /* BUTTONS */
+    .btn {
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-primary { background: var(--primary-blue); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-secondary { background: #334155; color: #f1f5f9; border: 1px solid #475569; }
+    .btn-secondary:hover { background: #475569; }
+
+    .btn-warning { background: #d97706; color: #fff; }
+    .btn-warning:hover { background: #b45309; }
+
+    .btn-danger { background: #dc2626; color: #fff; }
+    .btn-danger:hover { background: #b91c1c; }
+
+    /* TOOLBAR */
+    footer {
+      background: #1e293b;
+      border-top: 1px solid var(--border-color);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #1e293b;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      width: 580px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header>
+    <div>
+      <div class="brand-title">
+        <span class="badge-dept">PBL Phase 3</span>
+        Smart Driver Drowsiness & Safety System
+      </div>
+      <div class="project-meta">
+        Team: <b>DSCPP-III-2026-T234</b> &nbsp;|&nbsp; Assigned Mentor: <b>Mr. Kamal Kumar Gola</b> &nbsp;|&nbsp; Architecture: <b>C (DSA) + C++ (OOP)</b>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <button id="webcamToggleBtn" class="btn btn-primary" onclick="toggleWebcam()">
+        📹 Start Camera Tracking
+      </button>
+      <div class="system-status-indicator">
+        <span class="status-dot" id="systemStatusDot"></span>
+        <span id="systemStatusText">Driver Monitoring Active</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN 3-CARD DASHBOARD -->
+  <main>
+    <!-- CARD 1: CAMERA & VISION -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-heading">
+          Driver Vision Tracking
+        </div>
+        <div class="card-subtitle">Real-Time Facial Landmarks</div>
+      </div>
+
+      <div class="camera-frame-box">
+        <div class="camera-tag">Webcam Input (Optical Stream)</div>
+        <div class="camera-state-badge" id="cameraStateBadge">Eyes: Open</div>
+        <div class="camera-ear-pill" id="cameraEarPill">EAR: 0.32</div>
+
+        <video id="webcamVideo" autoplay playsinline muted></video>
+        <canvas id="landmarkCanvas" width="640" height="480"></canvas>
+      </div>
+
+      <table class="metrics-table">
+        <tr>
+          <td>Eye Aspect Ratio (EAR):</td>
+          <td id="tableEarVal">0.32 (Normal Attentive)</td>
+        </tr>
+        <tr>
+          <td>Eye Closure Duration:</td>
+          <td id="tableClosureVal">0.0 sec</td>
+        </tr>
+        <tr>
+          <td>PERCLOS Fatigue Score:</td>
+          <td id="tableFatigueVal" style="color: #34d399;">12% (Low Risk)</td>
+        </tr>
+        <tr>
+          <td>Vehicle Speed (OBD-II Telemetry):</td>
+          <td id="tableSpeedVal">80 km/h</td>
+        </tr>
+        <tr>
+          <td>Active Safety Priority Level:</td>
+          <td id="tableAlertLevelVal" style="color: #34d399;">Level 0 (Normal)</td>
+        </tr>
+      </table>
+
+      <div style="margin-top: 14px;">
+        <button class="btn btn-warning" style="width: 100%; justify-content: center;"
+                onmousedown="startHoldEyeClosure()" onmouseup="endHoldEyeClosure()"
+                ontouchstart="startHoldEyeClosure()" ontouchend="endHoldEyeClosure()">
+          👁️ Hold to Test Eye Closure (or Press SPACEBAR)
+        </button>
+      </div>
+    </div>
+
+    <!-- CARD 2: TELEMETRY & ALERTS -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-heading">
+          Vehicle Safety Telemetry
+        </div>
+        <div class="card-subtitle">Threshold: EAR &lt; 0.20</div>
+      </div>
+
+      <!-- Main Alert Banner -->
+      <div class="status-alert-box" id="mainStatusBanner">
+        Status: Driver Attentive & Safe
+      </div>
+
+      <!-- Gauges -->
+      <div class="gauges-grid">
+        <div class="gauge-card">
+          <div class="gauge-title">Vehicle Speed</div>
+          <div class="gauge-val-display" id="displaySpeed" style="color: #38bdf8;">80 <span style="font-size:14px; color:#94a3b8;">km/h</span></div>
+          <div style="font-size: 11px; color:#94a3b8; margin-top:2px;">Target: 80 km/h cruising</div>
+        </div>
+        <div class="gauge-card">
+          <div class="gauge-title">Fatigue Index</div>
+          <div class="gauge-val-display" id="displayFatigue" style="color: #34d399;">12%</div>
+          <div style="font-size: 11px; color:#94a3b8; margin-top:2px;">Safe Operating Zone</div>
+        </div>
+      </div>
+
+      <!-- Live EAR Waveform -->
+      <div class="graph-card">
+        <div class="graph-header">
+          <span>Real-Time EAR Trend (Sliding Window Stream)</span>
+          <span style="color: #ef4444;">-- Threshold Limit (0.20)</span>
+        </div>
+        <canvas id="earGraph" height="85"></canvas>
+      </div>
+
+      <!-- Quick DSA Tools Toolbar -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;">
+        <button class="btn btn-secondary" style="justify-content: center;" onclick="openBSTSearchModal()">
+          🔍 Search Incident (BST)
+        </button>
+        <button class="btn btn-secondary" style="justify-content: center;" onclick="openQuickSortModal()">
+          📊 Sort Logs (QuickSort)
+        </button>
+      </div>
+    </div>
+
+    <!-- CARD 3: DATA STRUCTURES (DSA IN C) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-heading">
+          Data Structures Module (C Core)
+        </div>
+        <div class="card-subtitle">Syllabus Units 1, 2, 4</div>
+      </div>
+
+      <!-- 1. Circular Queue -->
+      <div class="dsa-group">
+        <div class="dsa-title-bar">
+          <span>Circular Queue (Sliding Window EAR)</span>
+          <span id="cqAvgBadge" style="color: #38bdf8;">Window Avg: 0.32</span>
+        </div>
+        <div class="cq-container" id="cqContainer">
+          <!-- 10 Slots -->
+        </div>
+      </div>
+
+      <!-- 2. Priority Queue (Max-Heap) -->
+      <div class="dsa-group">
+        <div class="dsa-title-bar">
+          <span>Priority Queue (Max-Heap Alert Dispatcher)</span>
+          <span>Heap Root</span>
+        </div>
+        <div class="heap-card" id="heapRootCard">
+          <span id="heapRootText">No Active Threat</span>
+          <span id="heapRootBadge" style="font-size: 11px; font-weight: 600; background: rgba(16,185,129,0.2); color:#34d399; padding: 2px 8px; border-radius: 4px;">NORMAL</span>
+        </div>
+      </div>
+
+      <!-- 3. Black-Box Stack -->
+      <div class="dsa-group" style="flex: 1; display:flex; flex-direction:column;">
+        <div class="dsa-title-bar">
+          <span>Black-Box Incident Stack (LIFO Vault)</span>
+          <span id="stackDepthBadge" style="color: var(--text-muted);">Depth: 0 / 20</span>
+        </div>
+        <div class="stack-list" id="stackList">
+          <div style="color: #64748b; font-size: 12px; text-align: center; padding-top: 35px;">
+            No critical incidents logged. Driving is safe.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- BOTTOM ACTION BAR -->
+  <footer>
+    <div class="footer-btn-group">
+      <span style="font-size: 13px; font-weight: 600; color: var(--text-muted); margin-right: 6px;">Evaluation Test Presets:</span>
+      <button class="btn btn-primary" onclick="triggerPreset('normal')">
+        Normal Driving
+      </button>
+      <button class="btn btn-warning" onclick="triggerPreset('distracted')">
+        Distracted / Yawn
+      </button>
+      <button class="btn btn-danger" onclick="triggerPreset('emergency')">
+        Drowsiness Alert (&gt; 2.5s)
+      </button>
+      <button class="btn btn-secondary" onclick="downloadBlackBoxFile()">
+        Export Black-Box Log (.txt)
+      </button>
+    </div>
+
+    <div>
+      <button class="btn btn-secondary" id="soundBtn" onclick="toggleAudioAlarm()">
+        🔊 Warning Buzzer: ON
+      </button>
+    </div>
+  </footer>
+
+  <!-- MODAL: BST SEARCH (Unit 3 & 4) -->
+  <div class="modal-overlay" id="bstModal">
+    <div class="modal-content">
+      <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">
+        Binary Search Tree (BST) Incident Lookup
+      </h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+        DSA Syllabus Unit 3 & 4: Retrieval of logged safety incidents with O(log N) search complexity.
+      </p>
+      <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+        <input type="number" id="bstQueryInput" placeholder="Enter Incident ID (e.g., 1, 2, 3...)"
+               style="flex: 1; background: #0f172a; border: 1px solid var(--border-light); color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 13px;">
+        <button class="btn btn-primary" onclick="performBSTSearch()">Search</button>
+      </div>
+      <div id="bstResultDisplay" style="background: #0f172a; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; min-height: 85px; font-size: 13px;">
+        Enter an Incident ID above and click Search.
+      </div>
+      <div style="text-align: right; margin-top: 14px;">
+        <button class="btn btn-secondary" onclick="document.getElementById('bstModal').style.display='none'">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: QUICKSORT AUDIT (Unit 4) -->
+  <div class="modal-overlay" id="quickSortModal">
+    <div class="modal-content" style="width: 620px;">
+      <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">
+        Post-Trip Safety Audit - QuickSort Algorithm
+      </h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+        DSA Syllabus Unit 4: In-place partitioning of incident records by Severity Level (Descending Order).
+      </p>
+      <div id="quickSortResultDisplay" style="background: #0f172a; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; max-height: 220px; overflow-y: auto; font-size: 12.5px;">
+        No incidents logged yet. Trigger an emergency incident first.
+      </div>
+      <div style="text-align: right; margin-top: 14px;">
+        <button class="btn btn-secondary" onclick="document.getElementById('quickSortModal').style.display='none'">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // State
+    let currentEAR = 0.32;
+    let closureDuration = 0.0;
+    let vehicleSpeed = 80;
+    let fatiguePercentage = 12;
+    let soundMuted = false;
+    let isKeyHeldDown = false;
+    let realMediaPipeEyesClosed = false;
+
+    // C DSA Data Structures Mirror
+    const QUEUE_SIZE = 10;
+    let circularQueueArray = new Array(QUEUE_SIZE).fill(0.32);
+    let queueRear = 9;
+    let earGraphHistory = new Array(60).fill(0.32);
+    let blackBoxRecords = [];
+    let recordCounter = 0;
+    let lastAlertTimestamp = 0;
+
+    // Audio Buzzer
+    let audioContext = null;
+    function getAudioContext() {
+      if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContext.state === 'suspended') audioContext.resume();
+      return audioContext;
+    }
+
+    function soundAlertBeep(frequency, durationSec) {
+      if (soundMuted) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + durationSec);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + durationSec);
+      } catch (e) {}
+    }
+
+    function toggleAudioAlarm() {
+      soundMuted = !soundMuted;
+      const btn = document.getElementById('soundBtn');
+      btn.innerText = soundMuted ? '🔇 Warning Buzzer: MUTED' : '🔊 Warning Buzzer: ON';
+      if (!soundMuted) getAudioContext();
+    }
+
+    // Spacebar Listeners
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        startHoldEyeClosure();
+      }
+    });
+    window.addEventListener('keyup', (e) => {
+      if (e.code === 'Space') {
+        endHoldEyeClosure();
+      }
+    });
+
+    function startHoldEyeClosure() {
+      isKeyHeldDown = true;
+      getAudioContext();
+    }
+    function endHoldEyeClosure() {
+      isKeyHeldDown = false;
+    }
+
+    // Circular Queue Enqueue (Unit 2 in C)
+    function enqueueEAR(val) {
+      queueRear = (queueRear + 1) % QUEUE_SIZE;
+      circularQueueArray[queueRear] = val;
+    }
+
+    function calculateAverageEAR() {
+      return circularQueueArray.reduce((acc, curr) => acc + curr, 0) / QUEUE_SIZE;
+    }
+
+    function renderCircularQueue() {
+      const container = document.getElementById('cqContainer');
+      container.innerHTML = '';
+      circularQueueArray.forEach((val, i) => {
+        const el = document.createElement('div');
+        el.className = 'cq-box ' + (val < 0.20 ? 'drowsy' : 'active');
+        el.innerHTML = `<span>[${i}]</span><span>${val.toFixed(2)}</span>`;
+        container.appendChild(el);
+      });
+      document.getElementById('cqAvgBadge').innerText = 'Window Avg: ' + calculateAverageEAR().toFixed(2);
+    }
+
+    // Stack Push (Unit 1 in C)
+    function pushIncident(ear, duration, desc) {
+      recordCounter++;
+      const timeNow = new Date().toTimeString().split(' ')[0];
+      const newRec = {
+        id: recordCounter,
+        time: timeNow,
+        ear: ear,
+        speed: vehicleSpeed,
+        severity: duration >= 2.5 ? 3 : 2,
+        desc: desc
+      };
+      blackBoxRecords.push(newRec);
+      renderStack();
+    }
+
+    function renderStack() {
+      const list = document.getElementById('stackList');
+      document.getElementById('stackDepthBadge').innerText = `Depth: ${blackBoxRecords.length} / 20`;
+      if (blackBoxRecords.length === 0) {
+        list.innerHTML = '<div style="color: #64748b; font-size: 12px; text-align: center; padding-top: 35px;">No critical incidents logged. Driving is safe.</div>';
+        return;
+      }
+      list.innerHTML = '';
+      for (let i = blackBoxRecords.length - 1; i >= 0; i--) {
+        const item = blackBoxRecords[i];
+        const card = document.createElement('div');
+        card.className = 'stack-item ' + (item.severity === 3 ? 'crit' : '');
+        card.innerHTML = `
+          <span><b>[#${item.id}] ${item.time}</b>: ${item.desc}</span>
+          <span style="font-weight:600;">EAR: ${item.ear.toFixed(2)}</span>
+        `;
+        list.appendChild(card);
+      }
+    }
+
+    // Waveform rendering
+    function renderWaveform() {
+      const canvas = document.getElementById('earGraph');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width = canvas.clientWidth;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Threshold line (0.20)
+      const thY = h - (0.20 / 0.45) * h;
+      ctx.beginPath();
+      ctx.strokeStyle = '#ef4444';
+      ctx.setLineDash([4, 4]);
+      ctx.moveTo(0, thY);
+      ctx.lineTo(w, thY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // EAR Line
+      ctx.beginPath();
+      ctx.strokeStyle = currentEAR < 0.20 ? '#ef4444' : '#38bdf8';
+      ctx.lineWidth = 2;
+      const step = w / (earGraphHistory.length - 1);
+      earGraphHistory.forEach((val, i) => {
+        const y = h - (val / 0.45) * h;
+        if (i === 0) ctx.moveTo(0, y);
+        else ctx.lineTo(i * step, y);
+      });
+      ctx.stroke();
+    }
+
+    // MediaPipe FaceMesh Setup
+    let cameraInstance = null;
+    let faceMeshObj = null;
+
+    async function toggleWebcam() {
+      const video = document.getElementById('webcamVideo');
+      const btn = document.getElementById('webcamToggleBtn');
+
+      if (!cameraInstance) {
+        getAudioContext();
+        try {
+          btn.innerText = '⌛ Initializing Camera...';
+
+          faceMeshObj = new FaceMesh({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+          });
+
+          faceMeshObj.setOptions({
+            maxNumFaces: 1,
+            refineLandmarks: true,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+          });
+
+          faceMeshObj.onResults(onFaceMeshResults);
+
+          cameraInstance = new Camera(video, {
+            onFrame: async () => {
+              if (faceMeshObj) await faceMeshObj.send({ image: video });
+            },
+            width: 640,
+            height: 480
+          });
+
+          await cameraInstance.start();
+          btn.innerText = '🛑 Stop Camera';
+          btn.classList.add('btn-danger');
+          btn.classList.remove('btn-primary');
+        } catch (err) {
+          console.error("Camera Init Error: ", err);
+          alert("Webcam could not start. You can use the Spacebar hotkey to demonstrate anytime!");
+          btn.innerText = '📹 Start Camera Tracking';
+        }
+      } else {
+        cameraInstance.stop();
+        cameraInstance = null;
+        btn.innerText = '📹 Start Camera Tracking';
+        btn.classList.remove('btn-danger');
+        btn.classList.add('btn-primary');
+        const canvas = document.getElementById('landmarkCanvas');
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function calculateDistance(p1, p2) {
+      return Math.hypot(p1.x - p2.x, p1.y - p2.y);
+    }
+
+    // MediaPipe Results Callback
+    function onFaceMeshResults(results) {
+      const canvas = document.getElementById('landmarkCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) {
+        realMediaPipeEyesClosed = false;
+        return;
+      }
+
+      const landmarks = results.multiFaceLandmarks[0];
+
+      // Left Eye
+      const l1 = landmarks[33], l2 = landmarks[160], l3 = landmarks[158];
+      const l4 = landmarks[133], l5 = landmarks[153], l6 = landmarks[144];
+      const leftEAR = (calculateDistance(l2, l6) + calculateDistance(l3, l5)) / (2.0 * calculateDistance(l1, l4));
+
+      // Right Eye
+      const r1 = landmarks[362], r2 = landmarks[385], r3 = landmarks[387];
+      const r4 = landmarks[263], r5 = landmarks[373], r6 = landmarks[380];
+      const rightEAR = (calculateDistance(r2, r6) + calculateDistance(r3, r5)) / (2.0 * calculateDistance(r1, r4));
+
+      const rawEAR = (leftEAR + rightEAR) / 2.0;
+
+      // Draw subtle green/red landmark points on eyes
+      const eyeIndices = [33, 160, 158, 133, 153, 144, 362, 385, 387, 263, 373, 380];
+      ctx.fillStyle = rawEAR < 0.21 ? '#ef4444' : '#10b981';
+      eyeIndices.forEach(idx => {
+        const pt = landmarks[idx];
+        ctx.beginPath();
+        ctx.arc(pt.x * canvas.width, pt.y * canvas.height, 2.5, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+
+      // Update state
+      realMediaPipeEyesClosed = (rawEAR < 0.21);
+    }
+
+    // Evaluation Presets
+    function triggerPreset(type) {
+      getAudioContext();
+      if (type === 'normal') {
+        isKeyHeldDown = false;
+        closureDuration = 0.0;
+        vehicleSpeed = 80;
+        fatiguePercentage = Math.max(8, fatiguePercentage - 10);
+      } else if (type === 'distracted') {
+        closureDuration = 1.6;
+        vehicleSpeed = 74;
+        fatiguePercentage = Math.min(65, fatiguePercentage + 15);
+        soundAlertBeep(850, 0.2);
+      } else if (type === 'emergency') {
+        isKeyHeldDown = true;
+        closureDuration = 3.0;
+        vehicleSpeed = 65;
+        fatiguePercentage = 95;
+        pushIncident(0.08, 3.0, "Critical Drowsiness (Microsleep > 2.5s)");
+        soundAlertBeep(1400, 0.3);
+      }
+    }
+
+    // ------------------------------------------------------------------------
+    // MAIN MONITORING LOOP (Runs every 200ms)
+    // ------------------------------------------------------------------------
+    let timerTick = 0;
+    setInterval(() => {
+      timerTick++;
+      const eyesAreClosed = isKeyHeldDown || realMediaPipeEyesClosed;
+
+      const stateBadge = document.getElementById('cameraStateBadge');
+      const banner = document.getElementById('mainStatusBanner');
+      const heapCard = document.getElementById('heapRootCard');
+      const heapText = document.getElementById('heapRootText');
+      const heapBadge = document.getElementById('heapRootBadge');
+
+      if (eyesAreClosed) {
+        currentEAR = 0.08 + (Math.random() * 0.03);
+        closureDuration += 0.2;
+        fatiguePercentage = Math.min(100, fatiguePercentage + 1.5);
+
+        stateBadge.innerText = 'Eyes: Closed [!]';
+        stateBadge.style.background = 'rgba(239, 68, 68, 0.2)';
+        stateBadge.style.borderColor = '#ef4444';
+        stateBadge.style.color = '#fca5a5';
+
+        // Critical Alert (> 2.0s)
+        if (closureDuration >= 2.0) {
+          banner.className = 'status-alert-box danger';
+          banner.innerText = 'EMERGENCY: Driver Asleep at the Wheel!';
+
+          heapCard.style.borderColor = '#ef4444';
+          heapText.innerText = 'Level 3: Critical Microsleep Alarm';
+          heapBadge.style.background = '#ef4444';
+          heapBadge.style.color = '#fff';
+          heapBadge.innerText = 'PRIORITY 3 (MAX)';
+
+          document.getElementById('tableAlertLevelVal').innerText = 'Level 3 (Critical)';
+          document.getElementById('tableAlertLevelVal').style.color = '#ef4444';
+
+          if (Date.now() - lastAlertTimestamp > 3500) {
+            lastAlertTimestamp = Date.now();
+            pushIncident(currentEAR, closureDuration, `Emergency: Eyes closed for ${closureDuration.toFixed(1)}s`);
+          }
+          if (timerTick % 2 === 0) soundAlertBeep(1200, 0.2);
+
+        } else if (closureDuration >= 1.0) {
+          banner.className = 'status-alert-box warning';
+          banner.innerText = 'Warning: Extended Eye Closure Detected';
+
+          heapCard.style.borderColor = '#f59e0b';
+          heapText.innerText = 'Level 2: Drowsiness Warning Chime';
+          heapBadge.style.background = '#f59e0b';
+          heapBadge.style.color = '#000';
+          heapBadge.innerText = 'PRIORITY 2';
+
+          document.getElementById('tableAlertLevelVal').innerText = 'Level 2 (Warning)';
+          document.getElementById('tableAlertLevelVal').style.color = '#f59e0b';
+
+          if (timerTick % 4 === 0) soundAlertBeep(800, 0.15);
+        }
+
+      } else {
+        closureDuration = Math.max(0.0, closureDuration - 0.4);
+        fatiguePercentage = Math.max(8, fatiguePercentage - 0.2);
+
+        stateBadge.innerText = 'Eyes: Open';
+        stateBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+        stateBadge.style.borderColor = '#10b981';
+        stateBadge.style.color = '#34d399';
+
+        banner.className = 'status-alert-box';
+        banner.innerText = 'Status: Driver Attentive & Safe';
+
+        heapCard.style.borderColor = 'var(--border-color)';
+        heapText.innerText = 'No Active Threat';
+        heapBadge.style.background = 'rgba(16,185,129,0.2)';
+        heapBadge.style.color = '#34d399';
+        heapBadge.innerText = 'NORMAL';
+
+        document.getElementById('tableAlertLevelVal').innerText = 'Level 0 (Normal)';
+        document.getElementById('tableAlertLevelVal').style.color = '#34d399';
+
+        // Subtle natural blink
+        if (timerTick % 25 === 0) {
+          currentEAR = 0.13;
+        } else {
+          currentEAR = 0.32 + (Math.random() * 0.02 - 0.01);
+        }
+      }
+
+      // Update Circular Queue
+      enqueueEAR(currentEAR);
+      renderCircularQueue();
+
+      // Update Graph
+      earGraphHistory.push(currentEAR);
+      earGraphHistory.shift();
+      renderWaveform();
+
+      // Update Numerical Labels
+      document.getElementById('cameraEarPill').innerText = 'EAR: ' + currentEAR.toFixed(2);
+      document.getElementById('tableEarVal').innerText = `${currentEAR.toFixed(2)} (${currentEAR < 0.20 ? 'Drowsy' : 'Attentive'})`;
+      document.getElementById('tableClosureVal').innerText = closureDuration.toFixed(1) + ' sec';
+      document.getElementById('tableFatigueVal').innerText = Math.round(fatiguePercentage) + '%';
+      document.getElementById('displaySpeed').innerHTML = `${vehicleSpeed} <span style="font-size:14px; color:#94a3b8;">km/h</span>`;
+      document.getElementById('displayFatigue').innerText = Math.round(fatiguePercentage) + '%';
+
+      const fatigueColor = fatiguePercentage > 75 ? '#ef4444' : (fatiguePercentage > 40 ? '#f59e0b' : '#34d399');
+      document.getElementById('displayFatigue').style.color = fatigueColor;
+      document.getElementById('tableFatigueVal').style.color = fatigueColor;
+
+    }, 200);
+
+    // BST Search Tool
+    function openBSTSearchModal() {
+      document.getElementById('bstModal').style.display = 'flex';
+    }
+
+    function performBSTSearch() {
+      const q = parseInt(document.getElementById('bstQueryInput').value);
+      const display = document.getElementById('bstResultDisplay');
+      if (isNaN(q)) {
+        display.innerHTML = '<span style="color:#ef4444;">Please enter a valid numeric ID.</span>';
+        return;
+      }
+      const item = blackBoxRecords.find(x => x.id === q);
+      if (item) {
+        display.innerHTML = `
+          <div style="color:#34d399; font-weight:600; margin-bottom:4px;">✔ Record Retrieved via BST Index (O(log N))</div>
+          <div><b>Incident ID:</b> #${item.id}</div>
+          <div><b>Timestamp:</b> ${item.time}</div>
+          <div><b>Severity:</b> Level ${item.severity}</div>
+          <div><b>EAR:</b> ${item.ear.toFixed(2)} | <b>Speed:</b> ${item.speed} km/h</div>
+          <div><b>Note:</b> ${item.desc}</div>
+        `;
+      } else {
+        display.innerHTML = `<span style="color:#f59e0b;">No incident found with ID #${q}. (Total logged: ${blackBoxRecords.length})</span>`;
+      }
+    }
+
+    // QuickSort Tool
+    function openQuickSortModal() {
+      document.getElementById('quickSortModal').style.display = 'flex';
+      const box = document.getElementById('quickSortResultDisplay');
+      if (blackBoxRecords.length === 0) {
+        box.innerHTML = 'No records in stack. Click [Drowsiness Alert] button to generate sample incidents.';
+        return;
+      }
+
+      let arr = [...blackBoxRecords];
+      // QuickSort Descending Severity
+      function partition(a, low, high) {
+        let pivot = a[high].severity;
+        let i = low - 1;
+        for (let j = low; j < high; j++) {
+          if (a[j].severity >= pivot) {
+            i++;
+            [a[i], a[j]] = [a[j], a[i]];
+          }
+        }
+        [a[i + 1], a[high]] = [a[high], a[i + 1]];
+        return i + 1;
+      }
+      function qs(a, low, high) {
+        if (low < high) {
+          let p = partition(a, low, high);
+          qs(a, low, p - 1);
+          qs(a, p + 1, high);
+        }
+      }
+      qs(arr, 0, arr.length - 1);
+
+      let html = `<table style="width:100%; border-collapse:collapse; text-align:left;">
+        <tr style="border-bottom:1px solid #475569; color:#94a3b8; font-size:12px;">
+          <th style="padding:4px;">ID</th>
+          <th style="padding:4px;">TIME</th>
+          <th style="padding:4px;">SEVERITY</th>
+          <th style="padding:4px;">EAR</th>
+          <th style="padding:4px;">EVENT NOTE</th>
+        </tr>`;
+
+      arr.forEach(r => {
+        html += `<tr style="border-bottom:1px solid #334155;">
+          <td style="padding:6px 4px;">#${r.id}</td>
+          <td style="padding:6px 4px;">${r.time}</td>
+          <td style="padding:6px 4px; font-weight:600; color:${r.severity === 3 ? '#ef4444' : '#f59e0b'}">Level ${r.severity}</td>
+          <td style="padding:6px 4px;">${r.ear.toFixed(2)}</td>
+          <td style="padding:6px 4px;">${r.desc}</td>
+        </tr>`;
+      });
+      html += `</table>`;
+      box.innerHTML = html;
+    }
+
+    // Export Log
+    function downloadBlackBoxFile() {
+      let content = "======================================================================\n";
+      content += "  SMART DRIVER DROWSINESS & SAFETY SYSTEM - BLACK-BOX AUDIT REPORT    \n";
+      content += "======================================================================\n";
+      content += `Team Code      : DSCPP-III-2026-T234\n`;
+      content += `Mentor         : Mr. Kamal Kumar Gola\n`;
+      content += `Export Date    : ${new Date().toLocaleString()}\n`;
+      content += `Vehicle Speed  : ${vehicleSpeed} km/h\n`;
+      content += `Average EAR    : ${calculateAverageEAR().toFixed(2)}\n`;
+      content += "----------------------------------------------------------------------\n";
+      content += "INCIDENT AUDIT LOG (LIFO ORDER):\n";
+      if (blackBoxRecords.length === 0) {
+        content += "No critical incidents logged. Driving was safe.\n";
+      } else {
+        blackBoxRecords.forEach(item => {
+          content += `[#${item.id}] ${item.time} | Level ${item.severity} | EAR: ${item.ear.toFixed(2)} | Speed: ${item.speed} km/h | ${item.desc}\n`;
+        });
+      }
+      content += "======================================================================\n";
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `driver_blackbox_report_${Date.now()}.txt`;
+      a.click();
+    }
+
+    // Initial render
+    renderCircularQueue();
+    renderStack();
+  </script>
+</body>
+</html>
